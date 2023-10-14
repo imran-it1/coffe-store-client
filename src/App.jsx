@@ -18,7 +18,7 @@ function App() {
 			</div>
 
 			<div className="grid gap-5 grid-cols-2">
-				{loadededCoffees?.map(coffee => (
+				{coffees?.map(coffee => (
 					<CoffeeCard
 						key={coffee._id}
 						coffee={coffee}
