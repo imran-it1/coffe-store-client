@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { AiFillDelete } from "react-icons/ai";
 import { AiTwotoneEdit } from "react-icons/ai";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import Swal from "sweetalert2";
 
 const Users = () => {
@@ -23,9 +23,12 @@ const Users = () => {
 			confirmButtonText: "Delete!",
 		}).then(result => {
 			if (result.isConfirmed) {
-				fetch(`http://localhost:5000/users/${id}`, {
-					method: "DELETE",
-				})
+				fetch(
+					`https://coffee-store-server-ql9lqw8nj-imran-it1.vercel.app/users/${id}`,
+					{
+						method: "DELETE",
+					}
+				)
 					.then(res => res.json())
 					.then(data => {
 						Swal.fire("Deleted!", "User has been deleted.", "success");
@@ -51,6 +54,7 @@ const Users = () => {
 							<th>Email</th>
 							<th>Password</th>
 							<th>Time</th>
+							<th>Last Signin</th>
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -61,6 +65,7 @@ const Users = () => {
 								<td>{user.email}</td>
 								<td>{user.password}</td>
 								<td>{user.createdAt}</td>
+								<td>{user.lastSignIn}</td>
 								<td className=" flex gap-4">
 									<button onClick={() => handleDelete(user._id)}>
 										<AiFillDelete className=" text-xl text-neutral-500 hover:text-orange-600 duration-200 ease-linear" />

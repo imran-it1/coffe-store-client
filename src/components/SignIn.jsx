@@ -1,6 +1,50 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Provider/AuthProvider";
 
 const SignIn = () => {
+	const { signInUser } = useContext(AuthContext);
+
+	const handleSignIn = e => {
+		e.preventDefault();
+		const form = e.target;
+		const email = form.email.value;
+		const password = form.password.value;
+
+		console.log(email, password);
+
+		signInUser(email, password)
+			.then(result => {
+				console.log(result.user);
+
+				const user = {
+					email,
+					lastSignIn: result.user?.metadata?.lastSignInTime,
+				};
+
+				// send user last log in time to the database
+				// We don't have access to the _id here, so we use inique email id for this operation
+
+				fetch(
+					"https://coffee-store-server-ql9lqw8nj-imran-it1.vercel.app/users",
+					{
+						method: "PATCH",
+						headers: {
+							"content-type": "application/json",
+						},
+						body: JSON.stringify(user),
+					}
+				)
+					.then(res => res.json())
+					.then(data => {
+						console.log(data);
+					});
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	};
+
 	return (
 		<div>
 			<div className="h-screen w-full">
@@ -18,7 +62,7 @@ const SignIn = () => {
 								Sign Up
 							</Link>
 						</p>
-						<form className="mt-8 space-y-4">
+						<form onSubmit={handleSignIn} className="mt-8 space-y-4">
 							<label className="block">
 								<span className="block mb-1 text-xs font-medium text-gray-700">
 									Your Email
